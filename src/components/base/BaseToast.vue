@@ -10,8 +10,7 @@ import toggle from '@/mixins/toggle'
 export default {
   props: {
     toastType: {
-      type: String,
-      default: 'success'
+      type: String
     },
     msg: {
       type: String
@@ -34,6 +33,8 @@ export default {
           return 'has-text-success'
         case 'error':
           return 'has-text-danger'
+        default:
+          return 'has-text-black'
       }
     }
   },

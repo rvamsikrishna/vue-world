@@ -1,6 +1,6 @@
 import format from 'date-fns/format'
 
-export const upperscase = value => {
+export const uppercase = value => {
   if (!value) return ''
   value = value.toString()
   return value.toUpperCase()

@@ -10,13 +10,18 @@
         <p v-else>Are you new here? <a @click="openAuthModal('signup')">Sign up</a></p>
       </template>
     </BaseModal>
+    <BaseToast 
+      :show="toast.isShowing" 
+      @hide-toast="$store.commit('shared/hideToast')" 
+      :msg="toast.message"
+      :toastType="toast.toastType"
+    />  
   </div>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue'
 import AuthWrapper from '@/components/AuthWrapper.vue'
-
 export default {
   name: 'App',
   data() {
@@ -27,9 +32,10 @@ export default {
       password: ''
     }
   },
-  created() {
-    // do stuff if not valid.
-    console.log('validator', this.errors.any())
+  computed: {
+    toast() {
+      return this.$store.getters['shared/toast']
+    }
   },
   components: {
     Navbar,

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
 import user from './modules/user'
+import shared from './modules/shared'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ export const store = new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    user
+    user,
+    shared
   },
   plugins: [
     createPersistedState({

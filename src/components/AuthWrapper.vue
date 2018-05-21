@@ -35,23 +35,27 @@ export default {
         if (this.authType === 'signup') {
           console.log('signup')
           auth.createUserWithEmail(this.email, this.password).then(() => {
-            this.onAuthSuccess()
+            this.onAuthSuccess('Welcome...')
           })
         } else if (this.authType === 'login') {
           console.log('login')
           auth.loginWithEmail(this.email, this.password).then(() => {
-            this.onAuthSuccess()
+            this.onAuthSuccess('Logged in successfully')
           })
         }
       })
     },
     googleSignin() {
       auth.loginWithGoogle().then(() => {
-        this.onAuthSuccess()
+        this.onAuthSuccess('Logged in successfully')
       })
     },
-    onAuthSuccess() {
+    onAuthSuccess(toastMsg) {
       this.$emit('auth-successful')
+      this.$store.commit('shared/showToast', {
+        message: toastMsg,
+        toastType: 'success'
+      })
     }
   }
 }
