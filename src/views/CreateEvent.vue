@@ -6,7 +6,7 @@
           <h1 class="title is-spaced has-text-weight-bold">Create an event</h1>
 
           <h2 class="subtitle has-text-weight-bold">Tell us about your event</h2>
-          <tags-input v-model="categories">
+          <tags-input v-model="event.categories">
             <div class="topics" slot-scope="{ tags, addTag, removeTag, inputAttrs, inputEvents }">
               <BaseTextInput v-validate="tagInputRules" :error="errors.first('Topic')" :value="inputAttrs.value" v-on="inputEvents"  label="Topic" placeholder="Add topic..."/>
               <span v-for="(tagValue, tagKey) in tags" :key="tagKey" class="tag is-success">
@@ -17,16 +17,16 @@
           </tags-input>
 
           <h2 class="subtitle has-text-weight-bold">Name & describe your event</h2>
-          <BaseTextInput v-validate="'required'" :error="errors.first('Title')" label="Title" v-model="title" placeholder="Add an event title..." type="text"/>
-          <BaseTextInput v-validate="'required'" :error="errors.first('Event description')" data-vv-as="Event description" label="Event description" v-model="description" placeholder="Add a description..." type="text" textarea/>
+          <BaseTextInput v-validate="'required'" :error="errors.first('Title')" label="Title" v-model="event.title" placeholder="Add an event title..." type="text"/>
+          <BaseTextInput v-validate="'required'" :error="errors.first('Event description')" data-vv-as="Event description" label="Event description" v-model="event.description" placeholder="Add a description..." type="text" textarea/>
           
           <h2 class="subtitle has-text-weight-bold">Where is your event</h2>
-          <BaseTextInput v-validate="'required'" :error="errors.first('Location')" label="Location" v-model="location" placeholder="Add location..." type="text"/>
+          <BaseTextInput v-validate="'required'" :error="errors.first('Location')" label="Location" v-model="event.location" placeholder="Add location..." type="text"/>
 
           <h2 class="subtitle has-text-weight-bold">When is your event</h2>
-          <DateTimeInput date label="Date" v-validate="'required'" :error="errors.first('Date')" v-model="eventDate" @input="eventDate = $event" placeholder="Select a date..."/> 
+          <DateTimeInput date label="Date" v-validate="'required'" :error="errors.first('Date')" :value="event.date" @input="setDate" placeholder="Select a date..."/> 
           
-          <DateTimeInput time label="Time" v-validate="'required'" :error="errors.first('Time')" v-model="eventTime" @input="eventTime = $event" placeholder="Add time"/> 
+          <DateTimeInput time label="Time" v-validate="'required'" :error="errors.first('Time')" :value="event.time" @input="setTime" placeholder="Add time"/> 
 
           <button @click="onSubmit" class="button is-primary">submit</button>
         </div>
@@ -42,18 +42,30 @@ import { isEmpty } from 'lodash'
 export default {
   data() {
     return {
-      title: '',
-      description: '',
-      location: '',
-      eventDate: '',
-      eventTime: '',
-      categories: {}
+      event: {
+        title: '',
+        description: '',
+        location: '',
+        date: '',
+        time: '',
+        categories: {}
+      },
+      time: null,
+      date: null
     }
   },
   components: { DateTimeInput, TagsInput },
   methods: {
     onSubmit() {
       this.$validator.validate().then(() => {})
+    },
+    setTime(ev) {
+      this.event.time = ev.formattedStr
+      this.time = ev.dateObj
+    },
+    setDate(ev) {
+      this.event.date = ev.formattedStr
+      this.date = ev.dateObj
     }
   },
   computed: {
@@ -61,6 +73,16 @@ export default {
       return {
         required: isEmpty(this.categories)
       }
+    },
+    timeStamp() {
+      if (this.date && this.time)
+        return new Date(
+          this.date.getFullYear(),
+          this.date.getMonth(),
+          this.date.getDate(),
+          this.time.getHours(),
+          this.time.getMinutes()
+        ).getTime()
     }
   }
 }

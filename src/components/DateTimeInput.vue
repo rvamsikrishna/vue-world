@@ -81,7 +81,7 @@ export default {
       config = {
         ...timeConfig,
         ...dateConfig,
-        dateFormat: 'l, F J, Y @ h : K'
+        dateFormat: 'l, F J, Y @ h : i K'
       }
 
     this.$options.fp = new Flatpickr(this.$refs.dateInput, {
@@ -91,8 +91,11 @@ export default {
   },
   methods: {
     fpChangeEvent(selected, datestr) {
-      console.log(`selected is ${selected}`)
-      this.$emit('input', datestr)
+      console.log(`selected is ${selected} , datestr is : ${datestr}`)
+      this.$emit('input', {
+        formattedStr: datestr,
+        dateObj: new Date(selected)
+      })
     }
   },
   beforeDestroy() {
