@@ -57,7 +57,14 @@ export default {
   components: { DateTimeInput, TagsInput },
   methods: {
     onSubmit() {
-      this.$validator.validate().then(() => {})
+      this.$validator.validate().then(result => {
+        if (result) {
+          this.$store.dispatch('events/addEventToDb', {
+            ...this.event,
+            timestamp: this.timeStamp
+          })
+        }
+      })
     },
     setTime(ev) {
       this.event.time = ev.formattedStr

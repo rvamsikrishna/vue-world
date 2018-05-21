@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
-import user from './modules/user'
 import shared from './modules/shared'
+import user from './modules/user'
+import events from './modules/events'
 
 Vue.use(Vuex)
 
@@ -14,7 +15,8 @@ export const store = new Vuex.Store({
   actions: {},
   modules: {
     user,
-    shared
+    shared,
+    events
   },
   plugins: [
     createPersistedState({
