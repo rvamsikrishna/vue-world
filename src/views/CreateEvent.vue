@@ -78,7 +78,7 @@ export default {
   computed: {
     tagInputRules() {
       return {
-        required: isEmpty(this.categories)
+        required: isEmpty(this.event.categories)
       }
     },
     timeStamp() {

@@ -1,7 +1,7 @@
 <template>
-    <div class="notification has-text-centered has-text-weight-bold" v-show="show">
+    <div class="notification has-text-centered has-text-weight-bold" v-show="show" :class="toastClass">
       <button @click="toggleActive" class="delete"></button>
-      <p :class="toastClass">{{msg}}</p>
+      <p>{{msg}}</p>
     </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
     },
     timeout: {
       type: Number,
-      default: 2000
+      required: true
     }
   },
   data() {
@@ -30,11 +30,11 @@ export default {
     toastClass() {
       switch (this.toastType) {
         case 'success':
-          return 'has-text-success'
+          return 'is-success'
         case 'error':
-          return 'has-text-danger'
+          return 'is-danger'
         default:
-          return 'has-text-black'
+          return ''
       }
     }
   },
@@ -67,4 +67,7 @@ export default {
     margin-bottom: 15px
     left: 50%
     transform: translateX(-50%)
+
+  .notification.is-danger
+    z-index: 10000
 </style>

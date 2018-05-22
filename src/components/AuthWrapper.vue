@@ -30,31 +30,53 @@ export default {
     onSubmit() {
       this.$validator.validate().then(result => {
         if (!result) {
+          console.log('error :', result)
           return
         }
         if (this.authType === 'signup') {
-          console.log('signup')
-          auth.createUserWithEmail(this.email, this.password).then(() => {
-            this.onAuthSuccess('Welcome...')
-          })
+          auth
+            .createUserWithEmail(this.email, this.password)
+            .then(() => {
+              this.onAuthSuccess('Welcome...')
+            })
+            .catch(err => {
+              this.onAuthFailure(err.message)
+            })
         } else if (this.authType === 'login') {
-          console.log('login')
-          auth.loginWithEmail(this.email, this.password).then(() => {
-            this.onAuthSuccess('Logged in successfully')
-          })
+          auth
+            .loginWithEmail(this.email, this.password)
+            .then(() => {
+              this.onAuthSuccess('Logged in successfully')
+            })
+            .catch(err => {
+              this.onAuthFailure(err.message)
+            })
         }
       })
     },
     googleSignin() {
-      auth.loginWithGoogle().then(() => {
-        this.onAuthSuccess('Logged in successfully')
-      })
+      auth
+        .loginWithGoogle()
+        .then(() => {
+          this.onAuthSuccess('Logged in successfully')
+        })
+        .catch(err => {
+          this.onAuthFailure(err.message)
+        })
     },
     onAuthSuccess(toastMsg) {
       this.$emit('auth-successful')
       this.$store.commit('shared/showToast', {
         message: toastMsg,
-        toastType: 'success'
+        toastType: 'success',
+        timeout: 2000
+      })
+    },
+    onAuthFailure(errMsg) {
+      this.$store.commit('shared/showToast', {
+        message: errMsg,
+        toastType: 'error',
+        timeout: 5000
       })
     }
   }

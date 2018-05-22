@@ -15,6 +15,7 @@
       @hide-toast="$store.commit('shared/hideToast')" 
       :msg="toast.message"
       :toastType="toast.toastType"
+      :timeout="toast.timeout"
     />  
   </div>
 </template>

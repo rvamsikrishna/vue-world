@@ -5,8 +5,7 @@
       <BaseIcon :icon="spinner" spin />
     </span>
     <button @click="toast=!toast" class="button">show toast</button>
-    <BaseToast :show="toast" @hide-toast="toast = false" msg="hi there"/>  
-    <progress class="progress is-primary" value="50" max="100">30%</progress>
+    <BaseToast :show="toast" @hide-toast="toast = false" :timeout="10000" msg="hi there"/>  
   </div>
 </template>
 

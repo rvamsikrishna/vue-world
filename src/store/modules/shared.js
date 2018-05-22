@@ -22,7 +22,7 @@ export default {
     },
     hideToast(state) {
       state.toast.isShowing = false
-      state.toast.msg = ''
+      state.toast.message = ''
       state.toast.toastType = null
       state.toast.timeout = null
     }

@@ -31,7 +31,8 @@ const auth = {
     this.context.$router.push('/')
     this.context.$store.commit('shared/showToast', {
       message: 'Logged out.... See you soon!',
-      toastType: 'success'
+      toastType: 'success',
+      timeout: 2000
     })
   }
 }
