@@ -4,13 +4,15 @@
     <span class="icon has-text-primary">
       <BaseIcon :icon="spinner" spin />
     </span>
-    <button @click="toast=!toast" class="button">show toast</button>
+    <button @click="$store.dispatch('events/fetchEventsFromDb', 'all')" class="button">show toast</button>
+    <div class="container">
+    </div>
     <BaseToast :show="toast" @hide-toast="toast = false" :timeout="10000" msg="hi there"/>  
   </div>
 </template>
 
 <script>
-import spinner from '@fortawesome/fontawesome-free-solid/faSpinner'
+import { faSpinner } from '@fortawesome/fontawesome-free-solid/'
 import DateTimeInput from '@/components/DateTimeInput.vue'
 export default {
   data() {
@@ -22,7 +24,7 @@ export default {
   },
   computed: {
     spinner() {
-      return spinner
+      return faSpinner
     }
   },
   components: {

@@ -7,6 +7,9 @@ const auth = {
   init(context) {
     this.context = context
     firebase.initializeApp(config)
+    const settings = { /* your settings... */ timestampsInSnapshots: true }
+    firebase.firestore().settings(settings)
+
     firebase.auth().onAuthStateChanged(user => {
       console.log(user)
       this.context.$store.dispatch('user/setCurrentUser', user)

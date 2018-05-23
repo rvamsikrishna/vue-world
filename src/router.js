@@ -23,7 +23,7 @@ const router = new Router({
       component: About
     },
     {
-      path: '/events',
+      path: '/events/:type',
       name: 'events',
       component: EventsPage
     },

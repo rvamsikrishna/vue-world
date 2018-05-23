@@ -17,7 +17,7 @@ export default {
     },
     timeout: {
       type: Number,
-      required: true
+      default: 2500
     }
   },
   data() {
@@ -67,6 +67,8 @@ export default {
     margin-bottom: 15px
     left: 50%
     transform: translateX(-50%)
+    @media screen and (max-width: 780px)
+      width: 90%
 
   .notification.is-danger
     z-index: 10000

@@ -12,6 +12,9 @@
             <router-link class="navbar-item has-text-primary has-text-weight-bold" to="/create-event">
                 Create an event
             </router-link>
+            <router-link class="navbar-item has-text-weight-bold" to="/events/all">
+                Explore
+            </router-link>
             <div class="navbar-item has-dropdown is-hoverable">
                 <BaseAvatar :src="userProfilePic" class="navbar-avatar" />
                 <div class="navbar-dropdown is-right">
