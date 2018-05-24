@@ -11,7 +11,7 @@ const auth = {
     firebase.firestore().settings(settings)
 
     firebase.auth().onAuthStateChanged(user => {
-      console.log(user)
+      // console.log(uer)
       this.context.$store.dispatch('user/setCurrentUser', user)
     })
   },

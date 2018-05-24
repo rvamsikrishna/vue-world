@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import About from './views/About.vue'
 import EventsPage from './views/EventsPage.vue'
 import CreateEvent from './views/CreateEvent.vue'
+import EventDetails from './views/EventDetails.vue'
 
 import { store } from '@/store'
 
@@ -25,12 +26,18 @@ const router = new Router({
     {
       path: '/events/:type',
       name: 'events',
-      component: EventsPage
+      component: EventsPage,
+      props: true
     },
     {
       path: '/create-event',
       name: 'createEvent',
       component: CreateEvent
+    },
+    {
+      path: '/event',
+      name: 'event',
+      component: EventDetails
     }
   ]
 })

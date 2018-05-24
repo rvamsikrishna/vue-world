@@ -19,23 +19,25 @@ export default {
   },
   getters: {
     all(state) {
-      return group(state.all, 'date')
+      return state.all
     },
     organizing(state) {
-      return group(state.organizing, 'date')
+      return state.organizing
     },
     attending(state) {
-      return group(state.attending, 'date')
+      return state.attending
     }
   },
   mutations: {
     setupEvents(state, { type, snap }) {
+      let docsArr = []
       snap.forEach(doc => {
-        state[type].push(doc.data())
+        docsArr.push({ ...doc.data(), id: doc.id })
       })
+      state[type].push(...group(docsArr, 'date'))
     },
     addEvent(state, event) {
-      state.all.unshift(event)
+      state.organizing.unshift(event)
     }
   },
   actions: {
@@ -46,13 +48,12 @@ export default {
         path = `users/${rootGetters.user.uid}/organizing`
       else if (type === 'attending')
         path = `users/${rootGetters.user.uid}/attending`
+
       firebase
         .firestore()
         .collection(path)
         .orderBy('timestamp')
         .startAt(Date.now())
-        // .where('timestamp', '>=', Date.now())
-        // .limit(5)
         .get()
         .then(snap => {
           commit('setupEvents', { type: type, snap: snap })
@@ -63,8 +64,8 @@ export default {
         .firestore()
         .collection('events')
         .add({ ...event, attendeesCount: 0 })
-        .then(() /*docRef*/ => {
-          // commit('addEvent', { ...event, id: docRef.id })
+        .then(docRef => {
+          commit('addEvent', { ...event, id: docRef.id })
           commit(
             'shared/showToast',
             {
