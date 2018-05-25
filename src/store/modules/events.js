@@ -1,6 +1,8 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
+//group array items based on common property
+
 const group = (arr, property) => {
   let obj = {}
   arr.forEach(i => {
