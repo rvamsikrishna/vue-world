@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="group" v-for="(group, groupIndex) in events" :key="group[0].date">
+    <div class="group" v-for="(group) in events" :key="group[0].date">
       <h1 class="title has-text-black">{{group[0].date}}</h1>
-      <template v-for="(event, eventIndex) in group">
-        <slot :event="{...event, gI: groupIndex, eI: eventIndex}"></slot>
+      <template v-for="(event) in group">
+        <slot :event="event"></slot>
       </template>
     </div>
   </div>
