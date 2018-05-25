@@ -27,19 +27,29 @@ const router = new Router({
       path: '/events/:type',
       name: 'events',
       component: EventsPage,
-      props: true
+      props: true,
+      meta: { requireAuth: true }
     },
     {
       path: '/create-event',
       name: 'createEvent',
-      component: CreateEvent
+      component: CreateEvent,
+      meta: { requireAuth: true }
     },
     {
-      path: '/event',
-      name: 'event',
-      component: EventDetails
+      path: '/event/:type/:id',
+      name: 'eventDetails',
+      component: EventDetails,
+      meta: { requireAuth: true }
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 router.beforeEach((to, from, next) => {
@@ -47,8 +57,14 @@ router.beforeEach((to, from, next) => {
   let requireAuth = to.matched.some(record => record.meta.requireAuth)
   let guestOnly = to.matched.some(record => record.meta.guestOnly)
 
-  if (requireAuth && !currentUser) next('/login')
-  else if (guestOnly && currentUser) next('/')
+  if (requireAuth && !currentUser) {
+    if (to.params.type === 'all') {
+      next()
+    } else {
+      store.commit('shared/toggleModal')
+      next(false)
+    }
+  } else if (guestOnly && currentUser) next('/')
   else next()
 })
 

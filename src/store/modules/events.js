@@ -19,22 +19,25 @@ export default {
   },
   getters: {
     all(state) {
-      return state.all
+      return group(state.all, 'date')
     },
     organizing(state) {
-      return state.organizing
+      return group(state.organizing, 'date')
     },
     attending(state) {
-      return state.attending
+      return group(state.attending, 'date')
+    },
+    selectedEvent(state) {
+      return (id, type) => {
+        return state[type].find(event => event.id === id)
+      }
     }
   },
   mutations: {
     setupEvents(state, { type, snap }) {
-      let docsArr = []
       snap.forEach(doc => {
-        docsArr.push({ ...doc.data(), id: doc.id })
+        state[type].push({ ...doc.data(), id: doc.id })
       })
-      state[type].push(...group(docsArr, 'date'))
     },
     addEvent(state, event) {
       state.organizing.unshift(event)

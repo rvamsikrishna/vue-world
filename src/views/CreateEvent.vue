@@ -22,6 +22,7 @@
           
           <h2 class="subtitle has-text-weight-bold">Where is your event</h2>
           <BaseTextInput v-validate="'required'" :error="errors.first('Location')" label="Location" v-model="event.location" placeholder="Add location..." type="text"/>
+          <BaseTextInput v-validate="'required'" :error="errors.first('Address')" data-vv-as="Address" label="Address" v-model="event.address" rows="2" placeholder="Add an address..." type="text" textarea/>
 
           <h2 class="subtitle has-text-weight-bold">When is your event</h2>
           <DateTimeInput date label="Date" v-validate="'required'" :error="errors.first('Date')" :value="event.date" @input="setDate" placeholder="Select a date..."/> 
@@ -46,6 +47,7 @@ export default {
         title: '',
         description: '',
         location: '',
+        address: '',
         date: '',
         time: '',
         categories: {}

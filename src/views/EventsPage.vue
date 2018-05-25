@@ -45,6 +45,7 @@ export default {
   methods: {
     navigateToEvent(event) {
       console.log('event clicked', event)
+      this.$router.push(`/event/${this.type}/${event.id}`)
     }
   }
 }

@@ -23,19 +23,16 @@ export default {
     {
       name: 'All Events',
       icon: faClock,
-      isActive: true,
       path: 'all'
     },
     {
       name: 'My Events',
       icon: faCalendarAlt,
-      isActive: false,
       path: 'organizing'
     },
     {
       name: 'Attending',
       icon: faUserFriends,
-      isActive: false,
       path: 'attending'
     }
   ]

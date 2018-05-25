@@ -6,11 +6,15 @@ export default {
       message: '',
       toastType: null,
       timeout: null
-    }
+    },
+    modal: false
   },
   getters: {
     toast(state) {
       return state.toast
+    },
+    modal(state) {
+      return state.modal
     }
   },
   mutations: {
@@ -25,6 +29,9 @@ export default {
       state.toast.message = ''
       state.toast.toastType = null
       state.toast.timeout = null
+    },
+    toggleModal(state) {
+      state.modal = !state.modal
     }
   },
   actions: {}

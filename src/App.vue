@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar @show-auth-modal="openAuthModal"/>
     <router-view/>
-    <BaseModal v-if="authModal" :show="authModal" @hide-modal="hideAuthModal">
+    <BaseModal v-if="modal" :show="modal" @hide-modal="hideAuthModal">
       <span slot="title" class="title">{{authType | uppercase}}</span>
       <AuthWrapper slot="body" :authType="authType" @auth-successful="hideAuthModal"/>
       <template slot="footer">
@@ -23,6 +23,8 @@
 <script>
 import Navbar from '@/components/Navbar.vue'
 import AuthWrapper from '@/components/AuthWrapper.vue'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'App',
   data() {
@@ -34,9 +36,10 @@ export default {
     }
   },
   computed: {
-    toast() {
-      return this.$store.getters['shared/toast']
-    }
+    ...mapGetters('shared', ['toast', 'modal'])
+    // toast() {
+    //   return this.$store.getters['shared/toast']
+    // }
   },
   components: {
     Navbar,
@@ -44,15 +47,14 @@ export default {
   },
   methods: {
     openAuthModal(authType) {
-      this.authModal = true
+      // this.authModal = true
+      this.$store.commit('shared/toggleModal')
       this.authType = authType
     },
     hideAuthModal() {
-      this.authModal = false
+      // this.authModal = false
+      this.$store.commit('shared/toggleModal')
       this.authType = null
-    },
-    onSubmit() {
-      console.log('validator', this.errors.any())
     }
   }
 }
