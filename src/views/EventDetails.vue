@@ -2,18 +2,28 @@
   <div class="container">
     <div class="columns">
       <div class="column is-12-mobile is-6-desktop is-offset-3-desktop">
-        <BaseCard>
-          <p class="is-size-5 has-text-weight-bold">Are you going? <span class="is-size-7 has-text-grey">{{event.attendeesCount}} people going</span></p>
-          <template slot="cardFooter">
-            <a class="card-footer-item is-primary">Yes</a>
-            <a class="card-footer-item">No</a>
+        <BaseCard v-if="event.organizer.uid !== userId">
+          <template v-if="!userAttending">
+            <p class="is-size-5 has-text-weight-bold">Are you going? <span class="is-size-7 has-text-grey">{{event.attendeesCount}} people going</span></p>
+            <template slot="cardFooter">
+                <a @click="attendEvent(event.id)" class="card-footer-item has-background-primary has-text-white">Yes</a>
+                <a class="card-footer-item has-background-grey-light has-text-white">No</a>
+            </template>
           </template>
+          
+          <template v-else>
+            <p class="is-size-5 has-text-weight-bold">You are attending this event. Do you want to bail out?</p>
+            <template slot="cardFooter">
+              <a @click="quitEvent(event.id)" class="card-footer-item has-background-danger has-text-white">Quit</a>
+            </template>
+          </template>
+
         </BaseCard>
         <p class="has-text-grey">{{event.date}} @ {{event.time}}</p>
         <h1 class="title">{{event.title}}</h1>
         <div class="columns has-text-primary has-text-weight-bold">
           <div class="column is-narrow">
-            <BaseAvatar :src="event.organizer.photoUrl"/>
+            <BaseAvatar :src="event.organizer.photoURL"/>
           </div>
           <div class="column">
             <p class="is-size-7 ">hosted by: {{event.organizer.name}}</p>
@@ -47,8 +57,21 @@ export default {
     },
     event() {
       const { id, type } = this.$route.params
-      console.log('details', id)
       return this.$store.getters['events/selectedEvent'](id, type)
+    },
+    userId() {
+      return this.$store.getters['user/user'].uid
+    },
+    userAttending() {
+      return !!this.event.attendees[this.userId]
+    }
+  },
+  methods: {
+    attendEvent() {
+      this.$store.dispatch('events/attendEvent', this.event)
+    },
+    quitEvent() {
+      this.$store.dispatch('events/quitEvent', this.event)
     }
   }
 }

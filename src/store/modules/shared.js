@@ -30,8 +30,11 @@ export default {
       state.toast.toastType = null
       state.toast.timeout = null
     },
-    toggleModal(state) {
-      state.modal = !state.modal
+    openModal(state) {
+      state.modal = true
+    },
+    closeModal(state) {
+      state.modal = false
     }
   },
   actions: {}

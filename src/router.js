@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
     if (to.params.type === 'all') {
       next()
     } else {
-      store.commit('shared/toggleModal')
+      store.commit('shared/openModal')
       next(false)
     }
   } else if (guestOnly && currentUser) next('/')

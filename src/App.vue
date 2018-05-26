@@ -48,12 +48,12 @@ export default {
   methods: {
     openAuthModal(authType) {
       // this.authModal = true
-      this.$store.commit('shared/toggleModal')
+      this.$store.commit('shared/openModal')
       this.authType = authType
     },
     hideAuthModal() {
       // this.authModal = false
-      this.$store.commit('shared/toggleModal')
+      this.$store.commit('shared/closeModal')
       this.authType = null
     }
   }

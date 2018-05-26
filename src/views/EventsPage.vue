@@ -36,15 +36,19 @@ export default {
   watch: {
     $route: {
       handler: function(to) {
+        let type = to.params.type
         if (!this.events.length)
-          this.$store.dispatch('events/fetchEventsFromDb', to.params.type)
+          if (type === 'all') this.$store.dispatch('events/fetchAllEvents')
+          else if (type === 'organizing')
+            this.$store.dispatch('events/fetchOrganizingEvents')
+          else if (type === 'attending')
+            this.$store.dispatch('events/fetchAttendingEvents')
       },
       immediate: true
     }
   },
   methods: {
     navigateToEvent(event) {
-      console.log('event clicked', event)
       this.$router.push(`/event/${this.type}/${event.id}`)
     }
   }

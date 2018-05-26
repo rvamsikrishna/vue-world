@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
@@ -41,32 +42,73 @@ export default {
     },
     addEvent(state, event) {
       state.organizing.unshift(event)
+    },
+    addAttending(state, { event, userObj }) {
+      let index = state.all.findIndex(ev => ev.id === event.id)
+      let updatedEvent = { ...event, attendees: { ...userObj } }
+      Vue.set(state.all, index, updatedEvent)
+      state.attending.unshift(updatedEvent)
     }
+    // removeAttending(state, { event, userId }) {
+    //   let attendingIndex = state.attending.findIndex(ev => ev.id === event.id)
+    //   this.state.attendEvent.splice(attendingIndex, 1)
+    //   let AllIndex = state.all.findIndex(ev => ev.id === event.id)
+    //   let updatedEvent = { ...event, attendees[userId]: false  }
+    //   Vue.set(state.all, AllIndex, updatedEvent)
+    // }
   },
   actions: {
-    fetchEventsFromDb({ commit, rootGetters }, type) {
-      let path
-      if (type === 'all') path = 'events'
-      else if (type === 'organizing')
-        path = `users/${rootGetters.user.uid}/organizing`
-      else if (type === 'attending')
-        path = `users/${rootGetters.user.uid}/attending`
-
+    fetchAllEvents({ commit }) {
       firebase
         .firestore()
-        .collection(path)
+        .collection('events')
         .orderBy('timestamp')
         .startAt(Date.now())
         .get()
         .then(snap => {
-          commit('setupEvents', { type: type, snap: snap })
+          commit('setupEvents', { type: 'all', snap: snap })
         })
     },
-    addEventToDb({ commit }, event) {
+    fetchOrganizingEvents({ commit, rootState }) {
       firebase
         .firestore()
         .collection('events')
-        .add({ ...event, attendeesCount: 0 })
+        .where('organizer.uid', '==', rootState.user.user.uid)
+        .orderBy('timestamp')
+        .startAt(Date.now())
+        .get()
+        .then(snap => {
+          commit('setupEvents', { type: 'organizing', snap: snap })
+        })
+    },
+    fetchAttendingEvents({ commit, rootState }) {
+      firebase
+        .firestore()
+        .collection('events')
+        .where('organizer.uid', '==', rootState.user.user.uid)
+        .orderBy('timestamp')
+        .startAt(Date.now())
+        .get()
+        .then(snap => {
+          commit('setupEvents', { type: 'attending', snap: snap })
+        })
+    },
+    addEventToDb({ commit, rootState }, event) {
+      const user = rootState.user.user
+      console.log('user', user)
+      const data = {
+        ...event,
+        attendeesCount: 0,
+        organizer: {
+          name: user.displayName || user.email.split('@')[0],
+          photoURL: user.photoURL,
+          uid: user.uid
+        }
+      }
+      firebase
+        .firestore()
+        .collection('events')
+        .add(data)
         .then(docRef => {
           commit('addEvent', { ...event, id: docRef.id })
           commit(
@@ -86,6 +128,35 @@ export default {
             timeout: 5000,
             toastType: 'error'
           })
+        })
+    },
+    attendEvent({ commit, rootState }, event) {
+      let user = rootState.user.user
+      let userObj = {}
+      userObj[user.uid] = {
+        name: user.name || user.email.split('@')[0],
+        photoURL: user.photoURL
+      }
+      firebase
+        .firestore()
+        .collection('events')
+        .doc(event.id)
+        .set({ attendees: userObj }, { merge: true })
+        .then(() => {
+          commit('addAttending', { event, userObj })
+        })
+    },
+    quitEvent({ rootState }, { event }) {
+      let user = rootState.user.user
+      let userObj = {}
+      userObj[user.uid] = firebase.firestore.FieldValue.delete()
+      firebase
+        .firestore()
+        .collection('events')
+        .doc(event.id)
+        .set({ attendees: userObj }, { merge: true })
+        .then(() => {
+          // commit('removeAttending', { event, userId: user.id })
         })
     }
   }
