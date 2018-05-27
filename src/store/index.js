@@ -7,6 +7,7 @@ import user from './modules/user'
 import events from './modules/events'
 
 Vue.use(Vuex)
+/*eslint no-undef: "off"*/
 
 export const store = new Vuex.Store({
   state: {},

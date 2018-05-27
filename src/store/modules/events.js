@@ -14,48 +14,68 @@ const group = (arr, property) => {
 export default {
   namespaced: true,
   state: {
-    all: [],
-    organizing: [],
-    attending: []
+    all: {
+      initialFetch: false,
+      events: []
+    },
+    organizing: {
+      initialFetch: false,
+      events: []
+    },
+    attending: {
+      initialFetch: false,
+      events: []
+    }
   },
   getters: {
+    initialFetched(state) {
+      return type => state[type].initialFetch
+    },
     all(state) {
-      return group(state.all, 'date')
+      return group(state.all.events, 'date')
     },
     organizing(state) {
-      return group(state.organizing, 'date')
+      return group(state.organizing.events, 'date')
     },
     attending(state) {
-      return group(state.attending, 'date')
+      return group(state.attending.events, 'date')
     },
     selectedEvent(state) {
       return (id, type) => {
-        return state[type].find(event => event.id === id)
+        return state[type].events.find(event => event.id === id)
       }
     }
   },
   mutations: {
     setupEvents(state, { type, snap }) {
+      state[type].initialFetch = true
       snap.forEach(doc => {
-        state[type].push({ ...doc.data(), id: doc.id })
+        state[type].events.push({ ...doc.data(), id: doc.id })
       })
     },
     addEvent(state, event) {
-      state.organizing.unshift(event)
+      if (state.organizing.initialFetch) state.organizing.events.unshift(event)
     },
     addAttending(state, { event, userObj }) {
-      let index = state.all.findIndex(ev => ev.id === event.id)
+      let index = state.all.events.findIndex(ev => ev.id === event.id)
       let updatedEvent = { ...event, attendees: { ...userObj } }
-      Vue.set(state.all, index, updatedEvent)
-      state.attending.unshift(updatedEvent)
+      Vue.set(state.all.events, index, updatedEvent)
+      if (state.attending.initialFetch)
+        state.attending.events.unshift(updatedEvent)
+    },
+    removeAttending(state, { event, userId }) {
+      let attendingIndex = state.attending.events.findIndex(
+        ev => ev.id === event.id
+      )
+      state.attending.events.splice(attendingIndex, 1)
+
+      let eventCopy = { ...event }
+      eventCopy.attendees[userId] = false
+
+      let allIndex = state.all.events.findIndex(ev => ev.id === event.id)
+      console.log('updated event', eventCopy)
+      Vue.set(state.all.events, allIndex, eventCopy)
     }
-    // removeAttending(state, { event, userId }) {
-    //   let attendingIndex = state.attending.findIndex(ev => ev.id === event.id)
-    //   this.state.attendEvent.splice(attendingIndex, 1)
-    //   let AllIndex = state.all.findIndex(ev => ev.id === event.id)
-    //   let updatedEvent = { ...event, attendees[userId]: false  }
-    //   Vue.set(state.all, AllIndex, updatedEvent)
-    // }
   },
   actions: {
     fetchAllEvents({ commit }) {
@@ -75,17 +95,18 @@ export default {
         .collection('events')
         .where('organizer.uid', '==', rootState.user.user.uid)
         .orderBy('timestamp')
-        .startAt(Date.now())
+        // .startAt(Date.now())
         .get()
         .then(snap => {
           commit('setupEvents', { type: 'organizing', snap: snap })
         })
     },
     fetchAttendingEvents({ commit, rootState }) {
+      const user = rootState.user.user
       firebase
         .firestore()
         .collection('events')
-        .where('organizer.uid', '==', rootState.user.user.uid)
+        .where(`attendees.${user.uid}.uid`, '==', user.uid)
         .orderBy('timestamp')
         .startAt(Date.now())
         .get()
@@ -135,8 +156,10 @@ export default {
       let userObj = {}
       userObj[user.uid] = {
         name: user.name || user.email.split('@')[0],
-        photoURL: user.photoURL
+        photoURL: user.photoURL,
+        uid: user.uid
       }
+
       firebase
         .firestore()
         .collection('events')
@@ -146,7 +169,7 @@ export default {
           commit('addAttending', { event, userObj })
         })
     },
-    quitEvent({ rootState }, { event }) {
+    quitEvent({ commit, rootState }, event) {
       let user = rootState.user.user
       let userObj = {}
       userObj[user.uid] = firebase.firestore.FieldValue.delete()
@@ -156,7 +179,7 @@ export default {
         .doc(event.id)
         .set({ attendees: userObj }, { merge: true })
         .then(() => {
-          // commit('removeAttending', { event, userId: user.id })
+          commit('removeAttending', { event, userId: user.uid })
         })
     }
   }

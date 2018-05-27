@@ -31,13 +31,16 @@ export default {
   computed: {
     events() {
       return this.$store.getters[`events/${this.type}`]
+    },
+    initialFetch() {
+      return this.$store.getters['events/initialFetched'](this.type)
     }
   },
   watch: {
     $route: {
       handler: function(to) {
         let type = to.params.type
-        if (!this.events.length)
+        if (!this.initialFetch)
           if (type === 'all') this.$store.dispatch('events/fetchAllEvents')
           else if (type === 'organizing')
             this.$store.dispatch('events/fetchOrganizingEvents')

@@ -4,9 +4,9 @@
       <div class="column is-12-mobile is-6-desktop is-offset-3-desktop">
         <BaseCard v-if="event.organizer.uid !== userId">
           <template v-if="!userAttending">
-            <p class="is-size-5 has-text-weight-bold">Are you going? <span class="is-size-7 has-text-grey">{{event.attendeesCount}} people going</span></p>
+            <p class="is-size-7 has-text-weight-bold">Are you going? <span class="is-size-7 has-text-grey">{{event.attendeesCount}} people going</span></p>
             <template slot="cardFooter">
-                <a @click="attendEvent(event.id)" class="card-footer-item has-background-primary has-text-white">Yes</a>
+                <a @click="attendEvent" class="card-footer-item has-background-primary has-text-white">Yes</a>
                 <a class="card-footer-item has-background-grey-light has-text-white">No</a>
             </template>
           </template>
@@ -14,7 +14,7 @@
           <template v-else>
             <p class="is-size-5 has-text-weight-bold">You are attending this event. Do you want to bail out?</p>
             <template slot="cardFooter">
-              <a @click="quitEvent(event.id)" class="card-footer-item has-background-danger has-text-white">Quit</a>
+              <a @click="quitEvent" class="card-footer-item has-background-danger has-text-white">Quit</a>
             </template>
           </template>
 
@@ -30,14 +30,14 @@
             <p class="is-size-7">categories: <span v-for="(v, k) in event.categories" :key="k" class="tag">{{k}}</span></p>
           </div>
         </div>
-        <p class="is-size-5 has-text-black has-text-weight-bold">
+        <p class="is-size-4 has-text-black has-text-weight-bold">
           Location
          <BaseIcon :icon="icon"/>
         </p>
         <p class="has-text-grey">address</p>
-        <p class="is-size-5 has-text-black has-text-weight-bold">Event Description</p>
+        <p class="is-size-4 has-text-black has-text-weight-bold">Event Description</p>
         <p class="has-text-grey">{{event.description}}</p>
-        <Attendees />
+        <Attendees :organizer="event.organizer" :attendees="event.attendees"/>
         <Comments />
       </div>
     </div>
@@ -82,7 +82,8 @@ export default {
     margin-top: 1.5em
     padding-top: 1em
 
-  base-card
-    .button
-      margin-top: 1em
+  p.is-size-4
+    margin-top: 1.2em
+    margin-bottom: .5em
+
 </style>
