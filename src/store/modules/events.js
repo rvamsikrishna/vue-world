@@ -75,6 +75,10 @@ export default {
       let allIndex = state.all.events.findIndex(ev => ev.id === event.id)
       console.log('updated event', eventCopy)
       Vue.set(state.all.events, allIndex, eventCopy)
+    },
+    updateEvent(state, { doc, eventId }) {
+      let index = state.all.events.findIndex(ev => ev.id == eventId)
+      Vue.set(state.all.events, index, { ...doc.data(), id: doc.id })
     }
   },
   actions: {
@@ -120,6 +124,8 @@ export default {
       const data = {
         ...event,
         attendeesCount: 0,
+        commentsSize: 0,
+        recentComments: [],
         organizer: {
           name: user.displayName || user.email.split('@')[0],
           photoURL: user.photoURL,
@@ -180,6 +186,30 @@ export default {
         .set({ attendees: userObj }, { merge: true })
         .then(() => {
           commit('removeAttending', { event, userId: user.uid })
+        })
+    },
+    submitComment({ rootState }, { comment, eventId }) {
+      let user = rootState.user.user
+      firebase
+        .firestore()
+        .collection('event_comments')
+        .doc(eventId)
+        .collection('comments')
+        .add({
+          name: user.displayName || user.email.split('@')[0],
+          avatar: user.photoURL,
+          comment: comment,
+          uid: user.uid,
+          timestamp: Date.now()
+        })
+    },
+    addEventRealtimeUpdate({ commit }, eventId) {
+      firebase
+        .firestore()
+        .collection('events')
+        .doc(eventId)
+        .onSnapshot(doc => {
+          commit('updateEvent', { doc, eventId })
         })
     }
   }

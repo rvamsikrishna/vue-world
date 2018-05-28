@@ -38,7 +38,7 @@
         <p class="is-size-4 has-text-black has-text-weight-bold">Event Description</p>
         <p class="has-text-grey">{{event.description}}</p>
         <Attendees :organizer="event.organizer" :attendees="event.attendees"/>
-        <Comments />
+        <Comments :eventId="event.id" :commentsSize="event.commentsSize" :comments="event.recentComments"/>
       </div>
     </div>
   </div>
@@ -73,6 +73,13 @@ export default {
     quitEvent() {
       this.$store.dispatch('events/quitEvent', this.event)
     }
+  },
+  created() {
+    console.log('event created', this.event.id)
+    // this.$store.dispatch('events/addEventRealtimeUpdate', this.event.id)
+  },
+  beforeDestroy() {
+    console.log('event destroyed')
   }
 }
 </script>

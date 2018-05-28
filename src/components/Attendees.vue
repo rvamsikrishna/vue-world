@@ -35,5 +35,6 @@ export default {
   .card
     border-bottom: 1px solid lightgrey
     margin-top: o
-    
+  .card .card-content
+    padding: 0.5rem 
 </style>

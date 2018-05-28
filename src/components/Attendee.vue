@@ -10,7 +10,6 @@
         </div>
       </div>
     </BaseCard>
-
 </template>
 
 <script>
