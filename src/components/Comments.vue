@@ -31,10 +31,15 @@ export default {
     submitComment() {
       this.$validator.validate().then(result => {
         if (result) {
-          this.$store.dispatch('events/submitComment', {
-            comment: this.comment,
-            eventId: this.eventId
-          })
+          this.$store
+            .dispatch('events/submitComment', {
+              comment: this.comment,
+              eventId: this.eventId
+            })
+            .then(() => {
+              this.comment = ''
+              this.$validator.reset()
+            })
         }
       })
     }

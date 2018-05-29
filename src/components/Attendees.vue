@@ -5,7 +5,7 @@
       <a @click="showAll = !showAll" class="has-text-right has-text-primary"> {{showAll ? 'see less &#11205;' : 'see all &#11206;'}}</a>
     </div>
     <Attendee :attendee="organizer" organizer/>
-    <Attendee v-for="attendee in attendeeesArr" :key="attendee.uid" :attendee="attendee"/>
+    <Attendee v-for="attendee in attendees" :key="attendee.uid" :attendee="attendee"/>
   </div>
 </template>
 
@@ -15,17 +15,11 @@ export default {
   components: { Attendee },
   props: {
     organizer: Object,
-    attendees: Object
+    attendees: Array
   },
   data() {
     return {
       showAll: false
-    }
-  },
-  computed: {
-    attendeeesArr() {
-      let arr = Object.values(this.attendees)
-      return this.showAll ? arr : arr.slice(0, 5)
     }
   }
 }

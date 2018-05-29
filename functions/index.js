@@ -15,8 +15,45 @@ exports.addUserToDb = functions.auth.user().onCreate(user => {
     .set(userData)
 })
 
+exports.modifyAttendees = functions.firestore
+  .document('events/{eventId}/attendees/{attendeeId}')
+  .onWrite((change, context) => {
+    const eventId = context.params.eventId
+    const attendeeId = context.params.attendeeId
+    const attendeeData = change.after.exists ? change.after.data() : null
+
+    const eventRef = admin
+      .firestore()
+      .collection('events')
+      .doc(eventId)
+
+    return eventRef.get().then(doc => {
+      let recentAttendees = doc.data().recentAttendees
+      let attendeesCount = doc.data().attendeesCount
+
+      if (recentAttendees.length > 5) recentAttendees.pop()
+
+      recentAttendees.unshift({
+        name: attendeeData.name,
+        avatar: attendeeData.avatar,
+        uid: attendeeData.uid
+      })
+      attendeesCount = attendeesCount + 1
+
+      return eventRef.update({
+        attendees: {
+          [`${attendeeData.uid}`]: attendeeData
+            ? true
+            : firebase.firestore.FieldValue.delete()
+        },
+        recentAttendees,
+        attendeesCount
+      })
+    })
+  })
+
 exports.onNewComment = functions.firestore
-  .document('event_comments/{eventId}/comments/{commentId}')
+  .document('events/{eventId}/comments/{commentId}')
   .onCreate((snap, context) => {
     const eventId = context.params.eventId
     let commentId = context.params.commentId

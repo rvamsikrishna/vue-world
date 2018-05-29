@@ -2,7 +2,7 @@
       <BaseCard class="is-shadowless">
       <div class="columns">
         <div class="column is-narrow">
-          <BaseAvatar :src="attendee.photoURL"/>
+          <BaseAvatar :src="attendee.avatar"/>
         </div>
         <div class="column">
           <p class="is-size-6 has-text-black">{{attendee.name}}</p>

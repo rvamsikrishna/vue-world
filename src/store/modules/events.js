@@ -25,7 +25,8 @@ export default {
     attending: {
       initialFetch: false,
       events: []
-    }
+    },
+    listener: null
   },
   getters: {
     initialFetched(state) {
@@ -57,28 +58,41 @@ export default {
       if (state.organizing.initialFetch) state.organizing.events.unshift(event)
     },
     addAttending(state, { event, userObj }) {
-      let index = state.all.events.findIndex(ev => ev.id === event.id)
-      let updatedEvent = { ...event, attendees: { ...userObj } }
-      Vue.set(state.all.events, index, updatedEvent)
-      if (state.attending.initialFetch)
+      if (state.attending.initialFetch) {
+        let index = state.all.events.findIndex(ev => ev.id === event.id)
+        let updatedEvent = { ...event, attendees: { ...userObj } }
+        Vue.set(state.all.events, index, updatedEvent)
         state.attending.events.unshift(updatedEvent)
+      }
     },
     removeAttending(state, { event, userId }) {
-      let attendingIndex = state.attending.events.findIndex(
-        ev => ev.id === event.id
-      )
-      state.attending.events.splice(attendingIndex, 1)
+      if (state.attending.initialFetch) {
+        let attendingIndex = state.attending.events.findIndex(
+          ev => ev.id === event.id
+        )
+        state.attending.events.splice(attendingIndex, 1)
 
-      let eventCopy = { ...event }
-      eventCopy.attendees[userId] = false
+        let eventCopy = { ...event }
+        eventCopy.attendees[userId] = false
 
-      let allIndex = state.all.events.findIndex(ev => ev.id === event.id)
-      console.log('updated event', eventCopy)
-      Vue.set(state.all.events, allIndex, eventCopy)
+        let allIndex = state.all.events.findIndex(ev => ev.id === event.id)
+        Vue.set(state.all.events, allIndex, eventCopy)
+      }
     },
     updateEvent(state, { doc, eventId }) {
       let index = state.all.events.findIndex(ev => ev.id == eventId)
       Vue.set(state.all.events, index, { ...doc.data(), id: doc.id })
+    },
+    clearEvents(state) {
+      state.all = { initialFetch: false, events: [] }
+      state.organizing = { initialFetch: false, events: [] }
+      state.attending = { initialFetch: false, events: [] }
+    },
+    addEventListener(state, query) {
+      state.listener = query
+    },
+    removeEventListener(state) {
+      state.listener = null
     }
   },
   actions: {
@@ -123,7 +137,9 @@ export default {
       console.log('user', user)
       const data = {
         ...event,
+        attendees: {},
         attendeesCount: 0,
+        recentAttendees: [],
         commentsSize: 0,
         recentComments: [],
         organizer: {
@@ -159,10 +175,9 @@ export default {
     },
     attendEvent({ commit, rootState }, event) {
       let user = rootState.user.user
-      let userObj = {}
-      userObj[user.uid] = {
+      let userObj = {
         name: user.name || user.email.split('@')[0],
-        photoURL: user.photoURL,
+        avatar: user.photoURL,
         uid: user.uid
       }
 
@@ -170,29 +185,31 @@ export default {
         .firestore()
         .collection('events')
         .doc(event.id)
-        .set({ attendees: userObj }, { merge: true })
+        .collection('attendees')
+        .doc(user.uid)
+        .set(userObj)
         .then(() => {
           commit('addAttending', { event, userObj })
         })
     },
     quitEvent({ commit, rootState }, event) {
       let user = rootState.user.user
-      let userObj = {}
-      userObj[user.uid] = firebase.firestore.FieldValue.delete()
       firebase
         .firestore()
         .collection('events')
         .doc(event.id)
-        .set({ attendees: userObj }, { merge: true })
+        .collection('attendees')
+        .doc(user.uid)
+        .delete()
         .then(() => {
           commit('removeAttending', { event, userId: user.uid })
         })
     },
     submitComment({ rootState }, { comment, eventId }) {
       let user = rootState.user.user
-      firebase
+      return firebase
         .firestore()
-        .collection('event_comments')
+        .collection('events')
         .doc(eventId)
         .collection('comments')
         .add({
@@ -204,13 +221,18 @@ export default {
         })
     },
     addEventRealtimeUpdate({ commit }, eventId) {
-      firebase
+      let query = firebase
         .firestore()
         .collection('events')
         .doc(eventId)
         .onSnapshot(doc => {
           commit('updateEvent', { doc, eventId })
+          commit('addEventListener', query)
         })
+    },
+    removeEventRealtimeUpdate({ commit, state }) {
+      state.listener()
+      commit('removeEventListener')
     }
   }
 }

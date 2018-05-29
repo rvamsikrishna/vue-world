@@ -5,9 +5,11 @@
           <BaseAvatar :src="comment.avatar"/>
         </div>
         <div class="column">
-          <p class="is-size-6 has-text-black">{{comment.name}}</p>
+          <p class="is-size-6 has-text-black">
+            {{comment.name}}
+            <span class="is-size-7 has-text-grey-light">{{comment.timestamp | format('h:mm a [ | ] D MMM YYYY')}}</span>
+          </p>
           <p class="is-size-6 has-text-grey">{{comment.comment}}</p>
-          <p class="is-size-7 has-text-grey-light">{{comment.timestamp | format('h:mm a D MMM YYYY')}}</p>
         </div>
       </div>
     </BaseCard>

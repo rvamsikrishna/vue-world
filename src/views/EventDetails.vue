@@ -34,10 +34,11 @@
           Location
          <BaseIcon :icon="icon"/>
         </p>
-        <p class="has-text-grey">address</p>
+        <p class="has-text-grey">{{event.address}}</p>
+        <p class="has-text-grey">{{event.location}}</p>
         <p class="is-size-4 has-text-black has-text-weight-bold">Event Description</p>
         <p class="has-text-grey">{{event.description}}</p>
-        <Attendees :organizer="event.organizer" :attendees="event.attendees"/>
+        <Attendees :organizer="event.organizer" :attendees="event.recentAttendees"/>
         <Comments :eventId="event.id" :commentsSize="event.commentsSize" :comments="event.recentComments"/>
       </div>
     </div>
@@ -60,7 +61,8 @@ export default {
       return this.$store.getters['events/selectedEvent'](id, type)
     },
     userId() {
-      return this.$store.getters['user/user'].uid
+      const user = this.$store.getters['user/user']
+      return user ? user.uid : null
     },
     userAttending() {
       return !!this.event.attendees[this.userId]
@@ -76,10 +78,11 @@ export default {
   },
   created() {
     console.log('event created', this.event.id)
-    // this.$store.dispatch('events/addEventRealtimeUpdate', this.event.id)
+    this.$store.dispatch('events/addEventRealtimeUpdate', this.event.id)
   },
   beforeDestroy() {
     console.log('event destroyed')
+    this.$store.dispatch('events/removeEventRealtimeUpdate')
   }
 }
 </script>
