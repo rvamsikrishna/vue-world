@@ -38,8 +38,11 @@ exports.modifyAttendees = functions.firestore
         avatar: attendeeData.avatar,
         uid: attendeeData.uid
       })
-      attendeesCount = attendeesCount + 1
-
+      if (attendeeData) {
+        attendeesCount = attendeesCount + 1
+      } else {
+        attendeesCount = attendeesCount - 1
+      }
       return eventRef.update({
         attendees: {
           [`${attendeeData.uid}`]: attendeeData

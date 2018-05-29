@@ -38,7 +38,7 @@
         <p class="has-text-grey">{{event.location}}</p>
         <p class="is-size-4 has-text-black has-text-weight-bold">Event Description</p>
         <p class="has-text-grey">{{event.description}}</p>
-        <Attendees :organizer="event.organizer" :attendees="event.recentAttendees"/>
+        <Attendees :organizer="event.organizer" :attendeesCount="event.attendeesCount" :attendees="event.recentAttendees"/>
         <Comments :eventId="event.id" :commentsSize="event.commentsSize" :comments="event.recentComments"/>
       </div>
     </div>
@@ -58,6 +58,7 @@ export default {
     },
     event() {
       const { id, type } = this.$route.params
+      console.log('details', type)
       return this.$store.getters['events/selectedEvent'](id, type)
     },
     userId() {

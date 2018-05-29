@@ -4,6 +4,7 @@
     <BaseTextInput v-validate="'required'" :error="errors.first('Respond')" @keydown.enter="submitComment" label="Respond" v-model="comment" placeholder="Add a response..." :rightIcon="icon" type="text"/>  
     <Comment v-if="commentsSize !== 0" v-for="comment in comments" :comment="comment" :key="comment.timestamp"/>
     <p v-else>No comments yet!</p>
+    <button  @click="showMoreComments" class="button is-primary">see all comments</button>
   </div>
 </template>
 
@@ -42,10 +43,19 @@ export default {
             })
         }
       })
+    },
+    showMoreComments() {
+      this.$store.dispatch('events/showMoreComments', {
+        type: 'comments',
+        eventId: this.eventId
+      })
     }
   }
 }
 </script>
 
-<style>
+<style lang="sass" scoped>
+  button.button
+    display: block
+    margin: 0 auto
 </style>

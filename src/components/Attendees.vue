@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="level">
-      <p class="is-size-4 has-text-black has-text-weight-bold">Attendees</p>
+      <p class="is-size-4 has-text-black has-text-weight-bold">Attendees <span class="tag is-primary">{{attendeesCount}}</span></p>
       <a @click="showAll = !showAll" class="has-text-right has-text-primary"> {{showAll ? 'see less &#11205;' : 'see all &#11206;'}}</a>
     </div>
     <Attendee :attendee="organizer" organizer/>
@@ -15,7 +15,8 @@ export default {
   components: { Attendee },
   props: {
     organizer: Object,
-    attendees: Array
+    attendees: Array,
+    attendeesCount: Number
   },
   data() {
     return {

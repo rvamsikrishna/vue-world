@@ -27,7 +27,7 @@ const router = new Router({
       path: '/events/:type',
       name: 'events',
       component: EventsPage,
-      props: true,
+      // props: true,
       meta: { requireAuth: true }
     },
     {
