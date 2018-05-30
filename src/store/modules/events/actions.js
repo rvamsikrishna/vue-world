@@ -151,6 +151,7 @@ export default {
       .collection(type)
       .orderBy('timestamp', 'desc')
       .startAfter(recentComments[recentComments.length - 1].timestamp)
+      .limit(5)
       .get()
       .then(snap => {
         commit('addMore', { eventType, type, eventId, snap, event })

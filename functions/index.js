@@ -1,6 +1,14 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const algoliasearch = require('algoliasearch')
+
 admin.initializeApp(functions.config().firebase)
+
+const ALGOLIA_ID = functions.config().algolia.app_id
+const ALGOLIA_ADMIN_KEY = functions.config().algolia.api_key
+
+const ALGOLIA_INDEX_NAME = 'events'
+const client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY)
 
 exports.addUserToDb = functions.auth.user().onCreate(user => {
   let userData = {
@@ -14,6 +22,22 @@ exports.addUserToDb = functions.auth.user().onCreate(user => {
     .doc(user.uid)
     .set(userData)
 })
+
+exports.onEventCreated = functions.firestore
+  .document('events/{eventId}')
+  .onCreate((snap, context) => {
+    const event = {
+      title: snap.data().title,
+      description: snap.data().description
+    }
+
+    // Add an 'objectID' field which Algolia requires
+    event.objectID = context.params.eventId
+
+    // Write to the algolia index
+    const index = client.initIndex(ALGOLIA_INDEX_NAME)
+    return index.saveObject(note)
+  })
 
 exports.modifyAttendees = functions.firestore
   .document('events/{eventId}/attendees/{attendeeId}')

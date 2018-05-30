@@ -6,10 +6,12 @@ import { store } from './store'
 import '@/components/_globals'
 import auth from './auth'
 import { uppercase, formatDate } from './filters'
+import algolia from './plugins/algolia'
 import './assets/sass/main.sass'
 
 Vue.config.productionTip = false
 Vue.use(VeeValidate)
+Vue.use(algolia, { indexName: 'events' })
 
 Vue.filter('uppercase', uppercase)
 Vue.filter('format', formatDate)

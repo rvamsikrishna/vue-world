@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/vue-fontawesome": "0.0.22",
+    "algoliasearch": "^3.27.1",
     "bulma": "^0.7.1",
     "date-fns": "^1.29.0",
     "firebase": "^5.0.2",

@@ -2,6 +2,8 @@
     <div class="container">
       <div class="columns">
         <div class="column is-12-mobile is-6-desktop is-offset-3-desktop">
+          <h1 class="title has-text-weight-bold">Event search</h1>
+          <Search />
           <EventsTabs :currentTab="currentEventType"/>
           <EventsSlot :events="events">
             <EventCard 
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+import Search from '@/components/Search.vue'
 import EventsTabs from '@/components/EventsTabs.vue'
 import EventCard from '@/components/EventCard.vue'
 import EventsSlot from '@/components/EventsSlot.vue'
@@ -25,6 +28,7 @@ import { mapActions } from 'vuex'
 export default {
   // props: ['type'],
   components: {
+    Search,
     EventsTabs,
     EventCard,
     EventsSlot

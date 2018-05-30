@@ -15,7 +15,7 @@
               </span>
             </div>
           </tags-input>
-
+      
           <h2 class="subtitle has-text-weight-bold">Name & describe your event</h2>
           <BaseTextInput v-validate="'required'" :error="errors.first('Title')" label="Title" v-model="event.title" placeholder="Add an event title..." type="text"/>
           <BaseTextInput v-validate="'required'" :error="errors.first('Event description')" data-vv-as="Event description" label="Event description" v-model="event.description" placeholder="Add a description..." type="text" textarea/>

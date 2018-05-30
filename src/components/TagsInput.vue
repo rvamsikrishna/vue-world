@@ -12,9 +12,9 @@ export default {
     addTag() {
       let obj = {}
       let newTag = this.newTag.trim()
-      // if (newTag.length === 0 || this.value.includes(newTag)) {
-      //   return
-      // }
+      if (newTag.length === 0 || this.value[newTag]) {
+        return
+      }
       obj[newTag] = true
       this.$emit('input', { ...this.value, ...obj })
       this.newTag = ''

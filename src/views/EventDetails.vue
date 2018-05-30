@@ -58,7 +58,6 @@ export default {
     },
     event() {
       const { id, type } = this.$route.params
-      console.log('details', type)
       return this.$store.getters['events/selectedEvent'](id, type)
     },
     userId() {
