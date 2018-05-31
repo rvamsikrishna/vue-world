@@ -58,7 +58,7 @@ router.beforeEach((to, from, next) => {
   let guestOnly = to.matched.some(record => record.meta.guestOnly)
 
   if (requireAuth && !currentUser) {
-    if (to.params.type === 'all') {
+    if (to.params.type === 'all' || to.params.type === 'search') {
       next()
     } else {
       store.commit('shared/openModal')

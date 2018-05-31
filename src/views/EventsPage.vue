@@ -49,9 +49,11 @@ export default {
       handler: function(to) {
         let type = to.params.type
         this.$store.commit('events/setCurrentEventType', type)
-        if (!this.initialFetch) this.fetchAllEvents()
-        else if (type === 'organizing') this.fetchOrganizingEvents()
-        else if (type === 'attending') this.fetchAttendingEvents()
+        if (!this.initialFetch) {
+          if (type === 'all') this.fetchAllEvents()
+          else if (type === 'organizing') this.fetchOrganizingEvents()
+          else if (type === 'attending') this.fetchAttendingEvents()
+        }
       },
       immediate: true
     }

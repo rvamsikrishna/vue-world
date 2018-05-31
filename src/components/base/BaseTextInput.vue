@@ -1,7 +1,7 @@
 <template>
     <div class="field">
         <label v-if="label" class="label">{{label}}</label>
-        <div class="control" :class="{'has-icons-left': leftIcon, 'has-icons-right': rightIcon}">
+        <div class="control" :class="{'has-icons-left': leftIcon, 'has-icons-right': rightIcon, 'is-loading': loading}">
             <textarea
               v-if="textarea"
               class="textarea"
@@ -48,6 +48,10 @@ export default {
     label: {
       type: String,
       default: null
+    },
+    loading: {
+      type: Boolean,
+      default: false
     },
     textarea: {
       type: Boolean,

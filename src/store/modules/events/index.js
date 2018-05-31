@@ -26,6 +26,7 @@ export default {
       initialFetch: false,
       events: []
     },
+    searchedEvent: null,
     listener: null
   },
   getters: {
@@ -46,7 +47,11 @@ export default {
     },
     selectedEvent(state) {
       return (id, type) => {
-        return state[type].events.find(event => event.id === id)
+        if (type === 'search') {
+          return state.searchedEvent
+        } else {
+          return state[type].events.find(event => event.id === id)
+        }
       }
     }
   },

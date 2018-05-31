@@ -14,29 +14,34 @@ export default {
   },
   addAttending(state, { event, userObj }) {
     if (state.attending.initialFetch) {
-      let index = state.all.events.findIndex(ev => ev.id === event.id)
+      // let index = state.all.events.findIndex(ev => ev.id === event.id)
       let updatedEvent = { ...event, attendees: { ...userObj } }
-      Vue.set(state.all.events, index, updatedEvent)
+      // Vue.set(state.all.events, index, updatedEvent)
       state.attending.events.unshift(updatedEvent)
     }
   },
-  removeAttending(state, { event, userId }) {
+  removeAttending(state, { event /*userId*/ }) {
     if (state.attending.initialFetch) {
       let attendingIndex = state.attending.events.findIndex(
         ev => ev.id === event.id
       )
       state.attending.events.splice(attendingIndex, 1)
 
-      let eventCopy = { ...event }
-      eventCopy.attendees[userId] = false
+      // let eventCopy = { ...event }
+      // eventCopy.attendees[userId] = false
 
-      let allIndex = state.all.events.findIndex(ev => ev.id === event.id)
-      Vue.set(state.all.events, allIndex, eventCopy)
+      // let allIndex = state.all.events.findIndex(ev => ev.id === event.id)
+      // Vue.set(state.all.events, allIndex, eventCopy)
     }
   },
-  updateEvent(state, { doc, eventId }) {
-    let index = state.all.events.findIndex(ev => ev.id == eventId)
-    Vue.set(state.all.events, index, { ...doc.data(), id: doc.id })
+  updateEvent(state, { doc, eventId, currentEventType }) {
+    let data = { ...doc.data(), id: doc.id }
+    if (currentEventType === 'search') {
+      state.searchedEvent = data
+      return
+    }
+    let index = state[currentEventType].events.findIndex(ev => ev.id == eventId)
+    Vue.set(state[currentEventType].events, index, data)
   },
   addMore(state, { eventType, type, eventId, snap, event }) {
     let typeName = 'recent' + type.charAt(0).toUpperCase() + type.slice(1)

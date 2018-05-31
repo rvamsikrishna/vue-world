@@ -1,11 +1,21 @@
 import firebase from 'firebase'
+import Vue from 'vue'
 
 export default {
   namespaced: true,
   state: {
-    tags: []
+    tags: [],
+    results: [],
+    searchedEvent: null
   },
-  getters: {},
+  getters: {
+    searchedEvent(state) {
+      return state.searchedEvent
+    },
+    results(state) {
+      return state.results
+    }
+  },
   mutations: {
     addTags(state, snap) {
       if (!snap.exists) return
@@ -15,6 +25,14 @@ export default {
     },
     clearTags(state) {
       state.tags = []
+    },
+    addSearchResults(state, results) {
+      results.forEach(res => {
+        state.results.push({ title: res.title, id: res.objectID })
+      })
+    },
+    clearSearchResults(state) {
+      state.results = []
     }
   },
   actions: {
@@ -28,6 +46,11 @@ export default {
         .then(snap => {
           commit('addTags', snap)
         })
+    },
+    fetchSearchResults({ commit }, searchQuery) {
+      return Vue.algoliaIndex.search({ query: searchQuery }).then(res => {
+        commit('addSearchResults', res.hits)
+      })
     }
   }
 }

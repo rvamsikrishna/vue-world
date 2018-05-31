@@ -30,7 +30,7 @@ export default {
     firebase
       .firestore()
       .collection('events')
-      .where(`attendees.${user.uid}.uid`, '==', user.uid)
+      .where(`attendees.${user.uid}`, '==', true)
       .orderBy('timestamp')
       .startAt(Date.now())
       .get()
@@ -126,17 +126,19 @@ export default {
         timestamp: Date.now()
       })
   },
-  addEventRealtimeUpdate({ commit }, eventId) {
+  addEventRealtimeUpdate({ commit, getters }, eventId) {
+    let currentEventType = getters.currentEventType
     let query = firebase
       .firestore()
       .collection('events')
       .doc(eventId)
       .onSnapshot(doc => {
-        commit('updateEvent', { doc, eventId })
+        commit('updateEvent', { doc, eventId, currentEventType })
         commit('addEventListener', query)
       })
   },
   removeEventRealtimeUpdate({ commit, state }) {
+    //unsubscribe yo realtime listener
     state.listener()
     commit('removeEventListener')
   },

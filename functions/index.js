@@ -31,12 +31,10 @@ exports.onEventCreated = functions.firestore
       description: snap.data().description
     }
 
-    // Add an 'objectID' field which Algolia requires
     event.objectID = context.params.eventId
 
-    // Write to the algolia index
     const index = client.initIndex(ALGOLIA_INDEX_NAME)
-    return index.saveObject(note)
+    return index.saveObject(event)
   })
 
 exports.modifyAttendees = functions.firestore
@@ -57,21 +55,23 @@ exports.modifyAttendees = functions.firestore
 
       if (recentAttendees.length > 5) recentAttendees.pop()
 
-      recentAttendees.unshift({
-        name: attendeeData.name,
-        avatar: attendeeData.avatar,
-        uid: attendeeData.uid
-      })
       if (attendeeData) {
+        recentAttendees.unshift({
+          name: attendeeData.name,
+          avatar: attendeeData.avatar,
+          uid: attendeeId
+        })
         attendeesCount = attendeesCount + 1
       } else {
+        let index = recentAttendees.findIndex(
+          attendee => attendee.uid === attendeeId
+        )
+        if (index > -1) recentAttendees.splice(index, 1)
         attendeesCount = attendeesCount - 1
       }
       return eventRef.update({
         attendees: {
-          [`${attendeeData.uid}`]: attendeeData
-            ? true
-            : firebase.firestore.FieldValue.delete()
+          [`${attendeeId}`]: attendeeData ? true : false
         },
         recentAttendees,
         attendeesCount
