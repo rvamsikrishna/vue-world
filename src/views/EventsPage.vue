@@ -67,6 +67,9 @@ export default {
     navigateToEvent(event) {
       this.$router.push(`/event/${this.currentEventType}/${event.id}`)
     }
+  },
+  beforeDestroy() {
+    this.$store.commit('search/clearSearchResults')
   }
 }
 </script>
