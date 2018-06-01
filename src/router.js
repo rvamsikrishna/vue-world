@@ -61,7 +61,7 @@ router.beforeEach((to, from, next) => {
     if (to.params.type === 'all' || to.params.type === 'search') {
       next()
     } else {
-      store.commit('shared/openModal')
+      store.commit('user/openAuthModal', 'login')
       next(false)
     }
   } else if (guestOnly && currentUser) next('/')

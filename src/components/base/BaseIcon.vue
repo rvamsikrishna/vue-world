@@ -1,12 +1,11 @@
 <template>
-    <font-awesome-icon :icon="icon" />
+    <font-awesome-icon :icon="icon" v-bind="$attrs" />
 </template>
 
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
 export default {
-  functinal: true,
   props: ['icon'],
   components: {
     FontAwesomeIcon

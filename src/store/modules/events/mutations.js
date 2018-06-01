@@ -62,5 +62,6 @@ export default {
   },
   removeEventListener(state) {
     state.listener = null
+    state.searchedEvent = null
   }
 }

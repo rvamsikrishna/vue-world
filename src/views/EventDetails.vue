@@ -2,7 +2,7 @@
   <div class="container">
     <div class="columns">
       <template v-if="event">
-        <div class="column is-12-mobile is-6-desktop is-offset-3-desktop">
+        <div class="column is-10-mobile is-offset-1-mobile is-8-tablet is-offset-2-tablet is-6-desktop is-offset-3-desktop">
           <BaseCard v-if="event.organizer.uid !== userId">
             <template v-if="!userAttending">
               <p class="is-size-7 has-text-weight-bold">Are you going? <span class="is-size-7 has-text-grey">{{event.attendeesCount}} people going</span></p>
@@ -73,12 +73,17 @@ export default {
       return user ? user.uid : null
     },
     userAttending() {
+      console.log('user', this.userId)
       return !!this.event.attendees[this.userId]
     }
   },
   methods: {
     attendEvent() {
-      this.$store.dispatch('events/attendEvent', this.event)
+      if (!this.userId) {
+        this.$store.commit('user/openAuthModal', 'login')
+      } else {
+        this.$store.dispatch('events/attendEvent', this.event)
+      }
     },
     quitEvent() {
       this.$store.dispatch('events/quitEvent', this.event)

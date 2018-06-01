@@ -7,14 +7,17 @@ export default {
       toastType: null,
       timeout: null
     },
-    modal: false
+    loading: {
+      isShowing: false,
+      text: ''
+    }
   },
   getters: {
     toast(state) {
       return state.toast
     },
-    modal(state) {
-      return state.modal
+    loading(state) {
+      return state.loading
     }
   },
   mutations: {
@@ -30,11 +33,13 @@ export default {
       state.toast.toastType = null
       state.toast.timeout = null
     },
-    openModal(state) {
-      state.modal = true
+    showLoading(state, text) {
+      state.loading.isShowing = true
+      state.loading.text = text
     },
     closeModal(state) {
-      state.modal = false
+      state.loading.isShowing = false
+      state.loading.text = ''
     }
   },
   actions: {}

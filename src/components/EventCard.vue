@@ -26,4 +26,9 @@ export default {
 <style lang="sass" scoped>
   .attendees-count
     margin-top: .25em
+
+  span.tag
+    position: absolute
+    top: 0
+    left: 0
 </style>
