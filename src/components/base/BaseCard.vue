@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-        <div class="card-content">
+    <div class="card-content">
       <slot></slot>
     </div>
     <div v-if="$slots.cardFooter" class="card-footer">

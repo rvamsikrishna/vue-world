@@ -40,7 +40,7 @@ export default {
   },
   watch: {
     isActive(newVal) {
-      if (this.show !== !!newVal) {
+      if (this.show !== newVal) {
         this.$emit('hide-toast', newVal)
       }
       this.setTimeout()

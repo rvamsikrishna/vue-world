@@ -27,7 +27,7 @@ const router = new Router({
       path: '/events/:type',
       name: 'events',
       component: EventsPage,
-      props: true,
+      // props: true,
       meta: { requireAuth: true }
     },
     {
@@ -58,10 +58,10 @@ router.beforeEach((to, from, next) => {
   let guestOnly = to.matched.some(record => record.meta.guestOnly)
 
   if (requireAuth && !currentUser) {
-    if (to.params.type === 'all') {
+    if (to.params.type === 'all' || to.params.type === 'search') {
       next()
     } else {
-      store.commit('shared/toggleModal')
+      store.commit('shared/openModal')
       next(false)
     }
   } else if (guestOnly && currentUser) next('/')
