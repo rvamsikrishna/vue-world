@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navbar @show-auth-modal="openAuthModal"/>
+    <BaseLoading :show="loading"/>
     <router-view/>
     <BaseModal :show="authModal.isOpen" @hide-modal="hideAuthModal">
       <span slot="title" class="title">{{authModal.authType | uppercase}}</span>
@@ -11,12 +12,6 @@
       </template>
     </BaseModal>
 
-    <BaseModal :show="loading.isShowing">
-      <div slot="body" class="has-text-centered">
-          <BaseIcon :icon="icon" class="has-text-primary" size="5x" spin/>
-          <p>{{loading.text ? loading.text :'loading..'}}</p>
-      </div>
-    </BaseModal>
     <BaseToast 
       :show="toast.isShowing" 
       @hide-toast="$store.commit('shared/hideToast')" 
@@ -76,5 +71,10 @@ export default {
   .google-signin
     span
       margin-left: .75em
+
+  .modal
+    .modal-card
+      .modal-card-body
+        background: red    
 
 </style>

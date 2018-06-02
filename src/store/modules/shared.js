@@ -7,10 +7,7 @@ export default {
       toastType: null,
       timeout: null
     },
-    loading: {
-      isShowing: false,
-      text: ''
-    }
+    loading: false
   },
   getters: {
     toast(state) {
@@ -33,13 +30,11 @@ export default {
       state.toast.toastType = null
       state.toast.timeout = null
     },
-    showLoading(state, text) {
-      state.loading.isShowing = true
-      state.loading.text = text
+    showLoading(state) {
+      state.loading = true
     },
-    closeModal(state) {
-      state.loading.isShowing = false
-      state.loading.text = ''
+    closeLoading(state) {
+      state.loading = false
     }
   },
   actions: {}

@@ -3,6 +3,7 @@ import 'firebase/firestore'
 
 export default {
   fetchAllEvents({ commit }) {
+    commit('shared/showLoading', null, { root: true })
     firebase
       .firestore()
       .collection('events')
@@ -11,9 +12,12 @@ export default {
       .get()
       .then(snap => {
         commit('setupEvents', { type: 'all', snap: snap })
+        commit('shared/closeLoading', null, { root: true })
       })
   },
   fetchOrganizingEvents({ commit, rootState }) {
+    commit('shared/showLoading', null, { root: true })
+
     firebase
       .firestore()
       .collection('events')
@@ -23,9 +27,11 @@ export default {
       .get()
       .then(snap => {
         commit('setupEvents', { type: 'organizing', snap: snap })
+        commit('shared/closeLoading', null, { root: true })
       })
   },
   fetchAttendingEvents({ commit, rootState }) {
+    commit('shared/showLoading', null, { root: true })
     const user = rootState.user.user
     firebase
       .firestore()
@@ -36,6 +42,7 @@ export default {
       .get()
       .then(snap => {
         commit('setupEvents', { type: 'attending', snap: snap })
+        commit('shared/closeLoading', null, { root: true })
       })
   },
   addEventToDb({ commit, rootState }, event) {

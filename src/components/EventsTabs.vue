@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs is-centered">
+  <div class="tabs is-centered is-marginless">
     <ul>
       <li v-for="tab in $options.$tabs" :key="tab.name" :class="{'is-active': tab.path === currentTab}">
         <router-link :to="`/events/${tab.path}`">
@@ -39,5 +39,5 @@ export default {
 }
 </script>
 
-<style>
+<style lang="sass" scoped>
 </style>

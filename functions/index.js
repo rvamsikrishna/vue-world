@@ -37,6 +37,17 @@ exports.onEventCreated = functions.firestore
     return index.saveObject(event)
   })
 
+exports.onEventDeleted = functions.firestore
+  .document('events/{eventId}')
+  .onDelete((snap, context) => {
+    const eventId = context.params.eventId
+
+    event.objectID = context.params.eventId
+
+    const index = client.initIndex(ALGOLIA_INDEX_NAME)
+    return index.deleteObject(eventId)
+  })
+
 exports.modifyAttendees = functions.firestore
   .document('events/{eventId}/attendees/{attendeeId}')
   .onWrite((change, context) => {
