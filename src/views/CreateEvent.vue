@@ -29,7 +29,7 @@
           
           <DateTimeInput time label="Time" v-validate="'required'" :error="errors.first('Time')" :value="event.time" @input="setTime" placeholder="Add time"/> 
 
-          <button @click="onSubmit" class="button is-primary">submit</button>
+          <button @click="onSubmit" class="button is-primary" :class="{'is-loading': loading}">submit</button>
         </div>
       </div>
     </div>
@@ -40,31 +40,40 @@
 import TagsInput from '@/components/TagsInput.vue'
 import DateTimeInput from '@/components/DateTimeInput.vue'
 import { isEmpty } from 'lodash'
+
+function initialState() {
+  return {
+    event: {
+      title: '',
+      description: '',
+      location: '',
+      address: '',
+      date: '',
+      time: '',
+      categories: {}
+    },
+    time: null,
+    date: null
+  }
+}
+
 export default {
   data() {
-    return {
-      event: {
-        title: '',
-        description: '',
-        location: '',
-        address: '',
-        date: '',
-        time: '',
-        categories: {}
-      },
-      time: null,
-      date: null
-    }
+    return initialState()
   },
   components: { DateTimeInput, TagsInput },
   methods: {
     onSubmit() {
       this.$validator.validate().then(result => {
         if (result) {
-          this.$store.dispatch('events/addEventToDb', {
-            ...this.event,
-            timestamp: this.timeStamp
-          })
+          this.$store
+            .dispatch('events/addEventToDb', {
+              ...this.event,
+              timestamp: this.timeStamp
+            })
+            .then(() => {
+              this.resetState()
+            })
         }
       })
     },
@@ -75,9 +84,15 @@ export default {
     setDate(ev) {
       this.event.date = ev.formattedStr
       this.date = ev.dateObj
+    },
+    resetState() {
+      Object.assign(this.$data, initialState())
     }
   },
   computed: {
+    loading() {
+      return this.$store.getters['shared/loading']
+    },
     tagInputRules() {
       return {
         required: isEmpty(this.event.categories)

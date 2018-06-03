@@ -23,7 +23,7 @@ export default {
     left: -200px
     width: 200px
     height: 4px
-    background-color: #2980b9
+    background-color: #42b883
     animation: loading 2s linear infinite
 
 @keyframes loading

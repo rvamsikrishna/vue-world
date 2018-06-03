@@ -10,7 +10,7 @@
     <BaseTextInput v-validate="'email|required'" :error="errors.first('Email')" label="Email" v-model="email" placeholder="Your email" type="email"/>
     <BaseTextInput v-validate="'required'" :error="errors.first('Password')" label="Password" v-model="password" placeholder="Your password" type="password"/>
 
-    <button @click="onSubmit" class="button is-primary">{{authType}}</button>
+    <button @click="onSubmit" class="button is-primary" :class="{'is-loading': loading}">{{authType}}</button>
   </div>
 </template>
 
@@ -26,13 +26,18 @@ export default {
       password: ''
     }
   },
+  computed: {
+    loading() {
+      return this.$store.getters['shared/loading']
+    }
+  },
   methods: {
     onSubmit() {
       this.$validator.validate().then(result => {
         if (!result) {
-          console.log('error :', result)
           return
         }
+        this.$store.commit('shared/showLoading')
         if (this.authType === 'signup') {
           auth
             .createUserWithEmail(this.email, this.password)
@@ -71,6 +76,7 @@ export default {
         toastType: 'success',
         timeout: 2000
       })
+      this.$store.commit('shared/closeLoading')
     },
     onAuthFailure(errMsg) {
       this.$store.commit('shared/showToast', {
@@ -78,6 +84,7 @@ export default {
         toastType: 'error',
         timeout: 5000
       })
+      this.$store.commit('shared/closeLoading')
     }
   }
 }

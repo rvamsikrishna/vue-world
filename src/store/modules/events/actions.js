@@ -46,6 +46,7 @@ export default {
       })
   },
   addEventToDb({ commit, rootState }, event) {
+    commit('shared/showLoading', null, { root: true })
     const user = rootState.user.user
     console.log('user', user)
     const data = {
@@ -61,7 +62,7 @@ export default {
         uid: user.uid
       }
     }
-    firebase
+    return firebase
       .firestore()
       .collection('events')
       .add(data)
@@ -77,6 +78,7 @@ export default {
           },
           { root: true }
         )
+        commit('shared/closeLoading', null, { root: true })
       })
       .catch(err => {
         commit('shared/showToast', {
@@ -84,6 +86,7 @@ export default {
           timeout: 5000,
           toastType: 'error'
         })
+        commit('shared/closeLoading', null, { root: true })
       })
   },
   attendEvent({ commit, rootState }, event) {
@@ -134,6 +137,7 @@ export default {
       })
   },
   addEventRealtimeUpdate({ commit, getters }, eventId) {
+    commit('shared/showLoading', null, { root: true })
     let currentEventType = getters.currentEventType
     let query = firebase
       .firestore()
@@ -142,6 +146,7 @@ export default {
       .onSnapshot(doc => {
         commit('updateEvent', { doc, eventId, currentEventType })
         commit('addEventListener', query)
+        commit('shared/closeLoading', null, { root: true })
       })
   },
   removeEventRealtimeUpdate({ commit, state }) {
