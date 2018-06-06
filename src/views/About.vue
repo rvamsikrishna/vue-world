@@ -4,10 +4,15 @@
     <span class="icon has-text-primary">
       <BaseIcon :icon="spinner" spin />
     </span>
-    <button @click="$store.dispatch('events/fetchEventsFromDb', 'all')" class="button">show toast</button>
+    <button @click="toast = !toast" class="button">show toast</button>
     <div class="container">
     </div>
-    <BaseToast :show="toast" @hide-toast="toast = false" :timeout="10000" msg="hi there"/>  
+    <BaseSlideYTransition>
+      <BaseToast :show="toast" @hide-toast="toast = false" :timeout="5000" msg="hi there"/>  
+    </BaseSlideYTransition>
+    <BaseSlideYTransition>
+      <p v-show="toast">hi there</p>
+    </BaseSlideYTransition>	
   </div>
 </template>
 

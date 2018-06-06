@@ -12,13 +12,15 @@
       </template>
     </BaseModal>
 
-    <BaseToast 
-      :show="toast.isShowing" 
-      @hide-toast="$store.commit('shared/hideToast')" 
-      :msg="toast.message"
-      :toastType="toast.toastType"
-      :timeout="toast.timeout"
-    />  
+    <BaseSlideYTransition>
+      <BaseToast 
+        :show="toast.isShowing" 
+        @hide-toast="$store.commit('shared/hideToast')" 
+        :msg="toast.message"
+        :toastType="toast.toastType"
+        :timeout="toast.timeout"
+      />  
+    </BaseSlideYTransition>
   </div>
 </template>
 
