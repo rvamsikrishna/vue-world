@@ -20,10 +20,9 @@ export default {
       this.newTag = ''
     },
     removeTag(tag) {
-      let obj = this.value
-      // obj[tag] = false
-      delete obj[tag]
-      this.$emit('input', { ...obj })
+      let obj = { ...this.value } // obj[tag] = false
+      this.$delete(obj, tag)
+      this.$emit('input', obj)
     }
   },
 
