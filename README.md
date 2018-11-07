@@ -1,6 +1,13 @@
-# Vue-world
 
+# Vue-world
 An application where you can create and host events built using vuejs, vue-router, vuex and firebase.
+
+![enter image description here](https://lh3.googleusercontent.com/bIDhbPIvqBYjLg_yqJ1iaesCSa8_LFPhnyUsvCNqfuwpTlA-uMky4kur3sA6Af6dcS97nKMgcPFq)
+![enter image description here](https://lh3.googleusercontent.com/78_cWLEe2eOW9Cy3Wi_BrEQnLExNH8Khoc5oE8FAvO8_Ou4vWPkFWxeZI1rNc3G7JByQvDWLFrZl)
+
+![enter image description here](https://lh3.googleusercontent.com/NuD-o6U8YtcmHwj6w9ox-4wr7ZA1ic8WHsGRSV-RwKYgYY2sVFvkL-WyPEA9_xmSmyVZL0-Z2Qxh)
+
+
 
 ## Getting Started
 Clone this repo on to your local machine
